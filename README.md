@@ -1,12 +1,12 @@
 # Requirements
 
 - Cython >= 0.27
-- libfprint == 0.99.0
+- libfprint == 0.7.0
 
 # Install
 
 ```
-pip install fprintw
+pip install git+https://github.com/gtors/fprint#egg=fprint-0.1
 ```
 
 # Usage
@@ -15,13 +15,13 @@ pip install fprintw
 import fprint
 
 fprint.init()
-devices = fprint.DiscoveredDevices()
-
-if len(devices) > 0:
-    dev = devices[0].open_device()
-    print_data = dev.enroll_finger_loop()
+ddevs = fprint.DiscoveredDevices()
+if len(ddevs) > 0:
+    ddev = ddevs[0]
+    dev = fprint.Device.open(ddev)
+    (print_data, image) = dev.enroll_finger()
     print_data = fprint.PrintData.from_data(print_data.data)
-    result = dev.verify_finger_loop(print_data)
+    (result, img) = dev.verify_finger(print_data)
     assert result is True
     dev.close()
 ```
